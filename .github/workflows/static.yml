@@ -1,0 +1,59 @@
+# Simple workflow for deploying static content to GitHub Pages
+name: Deploy static content to Pages
+
+on:
+  # Runs on pushes targeting the default branch
+  push:
+    branches: ["main"]
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+# Sets permissions of the GITHUB_TOKEN to allow deployment to GitHub Pages
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Allow only one concurrent deployment, skipping runs queued between the run in-progress and latest queued.
+# However, do NOT cancel in-progress runs as we want to allow these production deployments to complete.
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
+
+jobs:
+  # Single deploy job since we're just deploying
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Clean Docker cache
+        run: docker system prune
+      - name: Build image
+        run: DOCKER_BUILDKIT=1 docker build -t fortinet-hugo . --target=prod
+      - name: Build static app
+        run: |
+         CONT_ID=$(docker run -d -v ${{github.workspace}}/layouts:/home/UserRepo/layouts \
+            -v ${{github.workspace}}/content/:/home/CentralRepo/content \
+            -v ${{github.workspace}}/config.toml:/home/CentralRepo/config.toml fortinet-hugo:latest build)
+         sleep 5
+         rm -rf ${{github.workspace}}/docs
+         docker cp $CONT_ID:/home/CentralRepo/public ${{github.workspace}}/docs
+         docker stop $CONT_ID
+         docker rm $CONT_ID
+      - name: Clear Docker cache
+        run: docker builder prune -f
+      - name: Setup Pages
+        uses: actions/configure-pages@v3
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v1
+        with:
+          # Upload entire repository
+          path: './docs'
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v2
