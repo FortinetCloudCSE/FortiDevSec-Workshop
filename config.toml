@@ -86,7 +86,7 @@ enableEmoji = true
   #logoBannerText="Custom Logo Banner"
 
   # Optional: If you'd like additional logo sub text/descriptions, use logoBannerSubText Parameter.  leave empty string to omit: ""
-  logoBannerSubText="sample sub-banner text"
+  logoBannerSubText="FortiDevSec/FortiDAST"
 
 
   # Prefix URL to edit current page. Will display an "Edit this page" button on top right hand corner of every page. 
