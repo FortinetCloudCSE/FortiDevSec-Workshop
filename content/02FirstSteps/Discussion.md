@@ -1,7 +1,7 @@
 ---
 title: "Discussion"
-chapter: true
-weight: 5 
+chapter: false
+weight: 29
 ---
 
 #### Discussion

@@ -1,6 +1,6 @@
 ---
 title: "FortiDevSec Workshop"
-chapter: true
+chapter: false
 weight: 1
 archetype: home
 ---

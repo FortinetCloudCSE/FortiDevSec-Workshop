@@ -1,0 +1,101 @@
+AWSTemplateFormatVersion: 2010-09-09
+Parameters:
+  VPCtoUse:
+    Type: String
+  GHAToken:
+    Type: String
+  KeyPair:
+    Type: String
+  LatestAmiId:
+    Type: 'AWS::SSM::Parameter::Value<AWS::EC2::Image::Id>'
+    Default: '/aws/service/ami-amazon-linux-latest/amzn2-ami-hvm-x86_64-gp2'
+  HashCheck:
+    Type: String
+  OrgName:
+    Type: String
+  RepoName:
+    Type: String
+  RunnerVersion:
+    Type: String
+
+Resources:
+  EC2RunnerAdminRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          -
+            Effect: Allow
+            Principal:
+              Service:
+                - "ec2.amazonaws.com"
+            Action:
+              - "sts:AssumeRole"
+      ManagedPolicyArns:
+        - 'arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore'
+  SSMRoleProfile:
+    Type: AWS::IAM::InstanceProfile
+    Properties:
+      Roles:
+        - !Ref EC2RunnerAdminRole
+  RunnerSG:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: Outbound HTTPS all allow
+      VpcId: !Ref VPCtoUse
+      SecurityGroupEgress:
+      - CidrIp: 0.0.0.0/0
+        FromPort: 0
+        IpProtocol: tcp
+        ToPort: 65535
+      SecurityGroupIngress:
+      - CidrIp: 0.0.0.0/0
+        FromPort: 443
+        IpProtocol: tcp
+        ToPort: 443
+      - CidrIp: 0.0.0.0/0
+        FromPort: 80
+        IpProtocol: tcp
+        ToPort: 80
+      - CidrIp: 0.0.0.0/0
+        FromPort: 22
+        IpProtocol: tcp
+        ToPort: 22
+  EC2Runner:
+    Type: AWS::EC2::Instance
+    Properties:
+      KeyName: !Ref KeyPair
+      InstanceType: t2.small
+      AvailabilityZone: !Sub '${AWS::Region}a'
+      ImageId: !Ref LatestAmiId
+      IamInstanceProfile: !Ref SSMRoleProfile
+      SecurityGroupIds:
+        - !Ref RunnerSG
+      UserData:
+        Fn::Base64: !Sub |
+          #!/bin/bash -xe
+          yum update -y && yum upgrade -y
+          yum install -y python3 docker git jq yum-utils
+          yum-config-manager --add-repo https://rpm.releases.hashicorp.com/AmazonLinux/hashicorp.repo
+          yum install -y terraform
+          pip3 install cfn-lint
+          systemctl start docker
+          useradd -m -G docker runner-user
+          curl -o /tmp/actions-runner-linux-x64-${RunnerVersion}.tar.gz -L https://github.com/actions/runner/releases/download/v${RunnerVersion}/actions-runner-linux-x64-${RunnerVersion}.tar.gz
+          echo "${HashCheck} /tmp/actions-runner-linux-x64-${RunnerVersion}.tar.gz" | sha256sum -c || echo "Hash check failed."
+          mkdir -p /tmp/actions-runner
+          tar xzf /tmp/actions-runner-linux-x64-${RunnerVersion}.tar.gz -C /tmp/actions-runner
+          mv /tmp/actions-runner /home/runner-user/
+          chown runner-user:runner-user -R /home/runner-user
+          cat <<EOF >> /var/lib/cloud/scripts/per-boot/test.sh
+          #!/bin/bash
+          systemctl start docker
+          su -c 'sh /home/runner-user/actions-runner/run.sh' runner-user
+          EOF
+          chmod 755 /var/lib/cloud/scripts/per-boot/test.sh
+          su -c 'sh /home/runner-user/actions-runner/config.sh --url https://github.com/${OrgName}/${RepoName} --token ${GHAToken}' runner-user
+          su -c 'sh /home/runner-user/actions-runner/run.sh' runner-user 
+      Tags:
+        - Key: Name
+          Value: !Sub "GHArunner - ${AWS::StackName}"

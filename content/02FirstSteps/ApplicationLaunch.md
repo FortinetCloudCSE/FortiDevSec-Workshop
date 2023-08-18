@@ -1,36 +1,42 @@
 ---
 title: "Application Launch"
-chapter: true
-weight: 3
+chapter: false
+weight: 25
 ---
 
-#### Application Launch
+### Application Launch
 
-For this task, you will utilize the Github Actions runner created in a previous step to deploy a terraform stack. The stack will contain several resources as part of a vulnerable web application reachable from the public internet. The URL can then be supplied to FortiDevSec to run a DAST scan.
+For this task, you will utilize the Github Actions runner created in a previous step to deploy a Terraform stack. The stack will contain several resources as part of a vulnerable web application reachable from the public internet. The URL can then be supplied to FortiDevSec to run a DAST scan.
 
-* Before Terraform can deploy resources in your AWS account, it will need credentials to do so. If you've indeed set up your AWS CLI, you can reference the AWS Access Key ID and AWS Secret Access Key for the relevant profile and add it to Github. First, navigate to your forked repo's main Github page, and click the **Settings** tab.
+*As a reminder, to complete this part of the lab, you will need an AWS User Access Key with Administrative permissions Terraform will need to create resources in your account. For more information see the official AWS documentation [here](https://docs.aws.amazon.com/IAM/latest/UserGuide/id_credentials_access-keys.html)*.
 
-* On the left-hand sidebar, click the **Secrets and variables** dropdown, and click **Actions**.
+First, you will need to store your AWS Access Key ID and Secret Access Key as GitHub secrets accessible by your runner. 
 
-    ![github-settings-secrets](/images/github-settings-secrets.png)
+In GitHub, navigate to your forked repo settings page.
 
-* Click the green **New repository secret** button.
+![goat-fork-settings](/images/goat-fork-settings.png)
 
-    ![github-settings-actions-secrets](/images/github-settings-actions-secrets.png)
+On the left-hand sidebar, click the **Secrets and variables** dropdown, and click **Actions**.
 
-* Under the **Name** field, type AWS_ACCESS_KEY_ID, and past in the key to the **Secret** field. Ensure it appears exactly as it does in your local AWS credentials file. Click **Add secret**.
+![github-settings-secrets](/images/github-settings-secrets.png)
 
-    ![access-key-enter](/images/access-key-enter.png)
+Click the green **New repository secret** button.
 
-* Repeat the process for another secret titled **AWS_SECRET_ACCESS_KEY**, and likewise paste in the secret key to the **Secret** field as it appears exactly in your local credentials file.
+![github-settings-actions-secrets](/images/github-settings-actions-secrets.png)
 
-* Once complete, you should have two repository secrets as in the screenshot below:
+Under the **Name** field, type AWS_ACCESS_KEY_ID, and past in the key to the **Secret** field. Click **Add secret**.
 
-    ![github-secrets-done](/images/github-secrets-done.png)
+![access-key-enter](/images/access-key-enter.png)
 
-* Now click the **Actions** tab, and click the **Terraform Apply** actions on the left-hand sidebar.
+Repeat the process for another secret titled **AWS_SECRET_ACCESS_KEY**, and likewise paste in the secret key to the **Secret** field.
 
-    ![actions-terraform-apply](/images/actions-terraform-apply.png)
+Once complete, you should have two repository secrets as in the screenshot below:
+
+![github-secrets-done](/images/github-secrets-done.png)
+
+Now click the **Actions** tab, and click **Terraform Apply** on the left-hand sidebar.
+
+![actions-terraform-apply](/images/actions-terraform-apply.png)
 
 * Click the **Run workflow** dropdown on the right-hand side of the page, and ensure the **master** branch and **module-1** are selected in the first and second dropdowns respectively, and click the green **Run workflow** button.
 

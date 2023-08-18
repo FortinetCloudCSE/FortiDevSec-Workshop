@@ -1,7 +1,7 @@
 # this is a required setting for this theme to appear on https://themes.gohugo.io/
 # change this to a value appropriate for you; if your site is served from a subdirectory
 # set it like "https://example.com/mysite/"
-baseURL = "https://fortinetcloudcse.github.io/UserRepo/"
+baseURL = "https://fortinetcloudcse.github.io/FortiDevSec-Workshop/"
 
 languageCode = "en-US"
 defaultContentLanguage = "en"
@@ -75,7 +75,7 @@ enableEmoji = true
 
 
 [params]
-  landingPageUrl = "UserRepo"
+  landingPageUrl = "FortiDevSec-Workshop"
   # Change default color scheme with a variant
   # Fortinet specific variants are: "Workshop", "UseCase", "Demo", "Spotlight", "FortinetSilver", "FortinetTeal".  These change the top left logo background & add Text under the Logo
   # For added variants, please contact fortinetcloudcse@fortinet.com

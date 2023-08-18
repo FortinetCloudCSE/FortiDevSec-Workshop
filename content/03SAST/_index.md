@@ -1,7 +1,7 @@
 ---
 title: "Running SAST Scans Locally"
-chapter: true
-weight: 3
+chapter: false
+weight: 30
 ---
 
 ### Running SAST Scans Locally (25 minutes)

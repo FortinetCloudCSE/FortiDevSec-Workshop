@@ -1,76 +1,81 @@
 ---
 title: "Github Actions Runner Setup"
-chapter: true
-weight: 2
+chapter: false
+weight: 23
 ---
 
 #### GitHub Actions Runner Setup
 
-For this task, you will need to deploy a cloudformation template which will launch an EC2 instance as a self-hosted github actions runner. Download the template and parameter file:
+For this task, you will need to deploy a CloudFormation template which will launch an EC2 instance as a self-hosted Github Actions runner. First, download the template and parameter file:
 
 ```sh
 cd ~/AWSGoat
-wget https://raw.githubusercontent.com/rob-40net-test/cft-utility-templates/main/launch-runner-ec2.yml
-wget https://raw.githubusercontent.com/rob-40net-test/cft-utility-templates/main/launch-runner-params.json
+wget https://raw.githubusercontent.com/FortinetCloudCSE/FortiDevSec-Workshop/main/cloudformation/github-actions/launch-runner-ec2.yml
+wget https://raw.githubusercontent.com/FortinetCloudCSE/FortiDevSec-Workshop/main/cloudformation/github-actions/launch-runner-params.json
+```
+*General instructions for setting up a runner with these CloudFormation templates may be found [here](https://github.com/rob-40net-test/cft-utility-templates/tree/main/GHA), or you may continue to follow along here.*
+
+In order to deploy the runner, you'll need to fill in several pieces of information in the parameter file *launch-runner-params.json*.
+
+On your forked application Github page, click the 'Settings' tab.
+
+![goat-fork-settings](/images/goat-fork-settings.png)
+
+Click the **Actions** dropdown on the left-hand sidebar, and click **Runners**.
+
+![github-settings](/images/github-settings.png)
+
+Click **New self-hosted runner**
+
+![github-settings-runner](/images/github-settings-runner.png)
+
+Click the **Linux** Runner image option.
+
+![github-settings-runner-2](/images/github-settings-runner-2.png)
+
+Note the **Download** and **Configure** sections beneath it:
+
+![new-runner](/images/new-runner.png)
+
+You will need to copy down several pieces of information in these sections/code blocks.
+
+First, note the *version number* of the actions runner package. This can be found in the **curl** command that is part of the **Download** code block. For example, in the fllowing code block, the package version is **2.300.2**.
+
+```sh
+...
+# Download the latest runner package
+$ curl -o actions-runner-linux-x64-2.300.2.tar.gz -L
+...
 ```
 
-* In order to deploy the runner, you'll need to fill in several pieces of information in the parameter file.
+Now find the the *validation hash*. For example, the validation hash in the following code block is **ed5bf2799c1ef7b2dd607df66e6b676dff8c44fb359c6fedc9ebf7db53339f0c**.
+```sh
+...
+# Optional: Validate the hash
+$ echo "ed5bf2799c1ef7b2dd607df66e6b676dff8c44fb359c6fedc9ebf7db53339f0c  actions-runner-linux-x64-2.300.2.tar.gz" | shasum -a 256 -c
+...
+```
 
-* On your forked application Github page, click the 'Settings' tab.
+Now find the *runner token*. This can be found in the **Configure** block:
+```sh
+# Create the runner and start the configuration experience
+$ ./config.sh --url https://github.com/robreris/AWSGoat --token A4H4MY4TN3TG1THU5ACT10NT0K3N
+```
+In this block, the token is A4H4MY4TN3TG1THU5ACT10NT0K3N.
 
-    ![goat-fork-settings](/images/goat-fork-settings.png)
+The version number, validation hash, and runner token correspond to the "RunnerVersion", "HashCheck", and "GHAToken" parameters in the json below.
 
-* Click **Actions** dropdown on the left-hand sidebar, and click **Runners**.
+In addition to these parameters, you will also need to populate the following information:
 
-    ![github-settings](/images/github-settings.png)
+* The logical ID of A VPC in your AWS account where the EC2 instance will be deployed (VPCtoUse).
+* The name of an EC2 key pair in the same region as this VPC (KeyPair). If you need to create one, please see [here](https://docs.aws.amazon.com/AWSEC2/latest/WindowsGuide/create-key-pairs.html).
+* The user/org name (OrgName) and repo name (RepoName) of your **forked** github repository. For example, if your repository is at:
+```sh
+https://github.com/MyOrg/AWSGoat
+```
+*The OrgName parameter would be 'MyOrg' and the AppName parameter would be 'AWSGoat'.*
 
-* Click **New self-hosted runner**
-
-    ![github-settings-runner](/images/github-settings-runner.png)
-
-* Click the **Linux** Runner image option.
-
-    ![github-settings-runner-2](/images/github-settings-runner-2.png)
-
-* Under the **Download** and **Configure** code blocks on this page, you will need to copy down several pieces of information:
-
-    * The version number of the actions runner package. This can be found in the **curl** command in the **Download** code block. For example:
-    ```sh
-    ...
-    # Download the latest runner package
-    $ curl -o actions-runner-linux-x64-2.300.2.tar.gz -L
-    ...
-    ```
-    In this code block, the package version is **2.300.2**.
-
-    * The validation hash. For example:
-    ```sh
-    ...
-    # Optional: Validate the hash
-    $ echo "ed5bf2799c1ef7b2dd607df66e6b676dff8c44fb359c6fedc9ebf7db53339f0c  actions-runner-linux-x64-2.300.2.tar.gz" | shasum -a 256 -c
-    ...
-    ```
-    The validation hash in the above block is **ed5bf2799c1ef7b2dd607df66e6b676dff8c44fb359c6fedc9ebf7db53339f0c**.
-
-    * The runner token. This can be found in the **Configure** block. For example:
-    ```sh
-    # Create the runner and start the configuration experience
-    $ ./config.sh --url https://github.com/robreris/AWSGoat --token A4H44W32NXYBTIH4722B3STDY4F5M
-    ```
-    In this block, the token is A4H44W32NXYBTIH4722B3STDY4F5M.
-
-* In addition to these parameters, you will also need to populate the parameters file with the following information:
-
-    * The logical ID of A VPC in your AWS account where the EC2 instance will be deployed.
-    * The name of an EC2 key pair in the same region as this VPC. If you need to create one, please see [here](https://docs.aws.amazon.com/AWSEC2/latest/WindowsGuide/create-key-pairs.html).
-    * The app name and repo name of your **forked** github repository. For example, if your repository is at:
-    ```sh
-    https://github.com/my-repo/AWSGoat
-    ```
-    The RepoName parameter would be 'my-repo' and the AppName parameter would be 'AWSGoat'.
-
-* Once you've filled in the launch-ec2-params.json file with this information, it should look something like this:
-
+A completed **launch-ec2-params.json** file would then look something like this:
 ```sh
 [
         {
@@ -79,7 +84,7 @@ wget https://raw.githubusercontent.com/rob-40net-test/cft-utility-templates/main
         },
         {
                 "ParameterKey": "GHAToken",
-                "ParameterValue": "A4H44W32NXYBTIH4722B3STDY4F5M"
+                "ParameterValue": "MY4TN3TG1THU5ACT10NT0K3N"
         },
         {
                 "ParameterKey": "KeyPair",
@@ -90,12 +95,12 @@ wget https://raw.githubusercontent.com/rob-40net-test/cft-utility-templates/main
                 "ParameterValue": "ed5bf2799c1ef7b2dd607df66e6b676dff8c44fb359c6fedc9ebf7db53339f0c"
         },
         {
-                "ParameterKey": "AppName",
-                "ParameterValue": "AWSGoat"
+                "ParameterKey": "OrgName",
+                "ParameterValue": "MyOrg"
         },
         {
                 "ParameterKey": "RepoName",
-                "ParameterValue": "my-repo"
+                "ParameterValue": "AWSGoat"
         },
         {
                 "ParameterKey": "RunnerVersion",
@@ -103,16 +108,14 @@ wget https://raw.githubusercontent.com/rob-40net-test/cft-utility-templates/main
         }
 ]
 ```
-
-
-* Once this file is populated and your command line environment has been configured with AWS credentials (as detailed above), you can deploy the stack. First, ensure local environment variables are set for the AWS Region and your AWS Profile:
+Once you've filled in these values and your command line environment has been configured with AWS credentials (as detailed above), you can deploy the stack. First, ensure local environment variables are set for the AWS Region and your AWS Profile:
 
 ```sh
 export AWS_DEFAULT_REGION=<your region>
 export AWS_PROFILE=<your profile as configured in your local AWS credentials file>
 ```
 
-* Now, you can launch the stack with the following command:
+Now, you can launch the stack with the following command:
 
 ```sh
 aws cloudformation create-stack --stack-name <enter a name for your stack here> \
@@ -120,8 +123,8 @@ aws cloudformation create-stack --stack-name <enter a name for your stack here> 
    --capabilities CAPABILITY_NAMED_IAM
 ```
 
-* Once the stack has finished deploying, you should see the new runner listed in Github. The EC2 instance deployed is configured for command line access via Session Manager. If troubleshooting runner deployment is necessary, connect via Session Manager and inspect the /var/log/cloud-init-output.log file for errors.
+Once the stack has finished deploying, you should see the new runner listed in Github. 
 
-    ![runner-deployed-idle](/images/runner-deployed-idle.png)
+***Please note:** The EC2 instance deployed is configured for command line access via Session Manager. If troubleshooting runner deployment is necessary, [connect via Session Manager](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/session-manager-to-linux.html) and inspect the /var/log/cloud-init-output.log file for errors.*
 
-
+![runner-deployed-idle](/images/runner-deployed-idle.png)
