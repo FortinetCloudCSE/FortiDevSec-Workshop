@@ -26,22 +26,6 @@ git clone <url copied above>
 cd AWSGoat
 ```
 
-Copy down the needed Terraform Github Actions workflows from the Workshop repository:
-
-```sh
-wget https://raw.githubusercontent.com/FortinetCloudCSE/FortiDevSec-Workshop/main/github-actions/tf-apply-main.yml
-wget https://raw.githubusercontent.com/FortinetCloudCSE/FortiDevSec-Workshop/main/github-actions/tf-destroy-main.yml
-cp tf-apply-main.yml tf-destroy-main.yml .github/workflows
-```
-
-Now commit the changes and push to your GitHub repository:
-
-```sh
-git add -A
-git commit -m "adding Terraform"
-git push
-```
-
 Navigate your browser to the FortiDevSec [https://fortidevsec.forticloud.com/](https://fortidevsec.forticloud.com/) console and click the login button at the top right of the screen.
 
 ![login-splash](/images/login-splash.png)

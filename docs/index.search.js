@@ -17,9 +17,7 @@ For the purposes of the TEC Recipe, you’ll need to configure a bug-tracking pr
 Enter a name for your forked version of the repo, make sure the Copy the master branch only box is checked, and click Create fork.
 At the github repository homepage for your newly forked repository, click the green Code dropdown, click the ‘HTTPS’ tab, and copy the url to the clipboard.
 From a command line, issue the following commands to clone the repo locally and navigate to the top-level directory:
-git clone \u003curl copied above\u003e cd AWSGoat Copy down the needed Terraform Github Actions workflows from the Workshop repository:
-wget https://raw.githubusercontent.com/FortinetCloudCSE/FortiDevSec-Workshop/main/github-actions/tf-apply-main.yml wget https://raw.githubusercontent.com/FortinetCloudCSE/FortiDevSec-Workshop/main/github-actions/tf-destroy-main.yml cp tf-apply-main.yml tf-destroy-main.yml .github/workflows Now commit the changes and push to your GitHub repository:
-git add -A git commit -m "adding Terraform" git push Navigate your browser to the FortiDevSec https://fortidevsec.forticloud.com/ console and click the login button at the top right of the screen.
+git clone \u003curl copied above\u003e cd AWSGoat Navigate your browser to the FortiDevSec https://fortidevsec.forticloud.com/ console and click the login button at the top right of the screen.
 Enter your Fortinet Support credentials.
 Once successfully logged in, you are taken to the main FortiDevSec dashboard.
 Click New Application at the top right of the dashboard screen, and the ‘New Application’ modal will appear.
@@ -54,14 +52,15 @@ First, you will need to store your AWS Access Key ID and Secret Access Key as Gi
 In GitHub, navigate to your forked repo settings page.
 On the left-hand sidebar, click the Secrets and variables dropdown, and click Actions.
 Click the green New repository secret button.
-Under the Name field, type AWS_ACCESS_KEY_ID, and past in the key to the Secret field. Click Add secret.
+Under the Name field, type AWS_ACCESS_KEY, and past in the key to the Secret field. Click Add secret.
 Repeat the process for another secret titled AWS_SECRET_ACCESS_KEY, and likewise paste in the secret key to the Secret field.
 Once complete, you should have two repository secrets as in the screenshot below:
 Now click the Actions tab, and click Terraform Apply on the left-hand sidebar.
 Click the Run workflow dropdown on the right-hand side of the page, and ensure the master branch and module-1 are selected in the first and second dropdowns respectively, and click the green Run workflow button.
 You should see the Terraform Apply workflow running.
 You can then click on the workflow run itself, then click on the job:
-You will then see the job steps listed individually. Scroll down and click the Application URL dropdown to retrieve the deployed application URL and note it down for use in a later section.
+You will then see the job steps listed individually. Scroll down and click the Application URL dropdown to retrieve the deployed application URL.
+If you paste the URL into a browser, you should see a webpage similar to the one below. Keep the URL handy for use in a later section.
 `,description:"",tags:null,title:"Application Launch",uri:"/02firststeps/applicationlaunch.html"},{content:`Set Up a JIRA Bug Tracking Project This task will involve integrating JIRA with FortiDevSec.
 First, in a web browser, navigate to JIRA and log in to your account. Click the Projects dropdown, and click Create project.
 Select the Software development project template.
@@ -80,10 +79,13 @@ First, nagivate to your FortiDevSec app dashboard and click the JIRA plugin icon
 Click the Add Jira Plugin switch, and fill in the values as appropriate.
 FortiDevSec Field Setting Jira Server Cloud URL Your Jira Domain (i.e. https://my-project.atlassian.net) Email ID The email associated with your Jira Account API Key The API key you set up in an earlier section Once you’ve entered in the information, click Fetch Details, and your project should appear next to Jira Projects.
 Select it, and click OK. The modal will disappear, and you should now see the JIRA plugin is Configured.
-Now, to run the SAST scan, the fdevsec.yaml file needs to be configured to tell FortiDevSec what kind of scan we want to run. If this is not specified, FortiDevSec will default to a SAST scan. We can also optionally specify the languages in the codebase that we want FortiDevSec to scan. If this parameter is left blank FortiDevSec will automatically detect the languages present. After adding the required details, the file should look like:
-version: v1 id: org: \u003cOrg ID\u003e app: \u003cApp ID\u003e scanners: - sast - secret - sca - iac - container Ensure docker is running.
-docker --version \u003e Docker version 20.10.21, build baeda1f Run the following command to start the scan:
+There are two ways we can now run the scan locally. We can configure the fdevsec.yaml in more of a declarative approach, or we can use a more imperative approach and utilize command line arguments. Both will be demonstrated below.
+First, ensure Docker is running in your command line environment.
+docker --version \u003e Docker version 20.10.21, build baeda1f Declarative Approach: Configuring fdevsec.yaml Now, to run the SAST scan, the fdevsec.yaml file needs to be configured to tell FortiDevSec what kind of scan we want to run. If this is not specified, FortiDevSec will default to a SAST scan. We can also optionally specify the languages in the codebase that we want FortiDevSec to scan. If this parameter is left blank FortiDevSec will automatically detect the languages present. After adding the required details, the file should look like:
+version: v1 id: org: \u003cOrg ID\u003e app: \u003cApp ID\u003e scanners: - sast - secret - sca - iac - container Run the following command to start the scan:
 docker run --rm --mount type=bind,source="$PWD",target=/scan registry.fortidevsec.forticloud.com/fdevsec_sast:latest You should see the following output once the scan is complete:
+Imperative Approach: Using Command Line Arguments Equivalently, we can run a scan strictly utilizing command line arguments without the fdevsec.yaml file. The following command runs a scan with a configuration equivalent to that in the previous section:
+docker run --rm --mount type=bind,source="$PWD",target=/scan registry.fortidevsec.forticloud.com/fdevsec_sast:latest main s \\ --org-id \u003cOrg ID\u003e \\ --app-id \u003cApp ID\u003e \\ -S=false --scanner sast --scanner sca --scanner iac --scanner container --scanner secrets For a full list of arguments that may be supplied, see the FortiDevSec documentation here: command line arguments.
 Now, open your browser and navigate to the FortiDevSec console and click on the application.
 You’ll be taken to the application dashboard, which displays scan details such as type, languages, the Git commit the scan was done on, as well as vulnerability information.
 Click VIEW ALL under the VULNERABILITIES heading on the main tab.

@@ -32,6 +32,18 @@ Select it, and click **OK**. The modal will disappear, and you should now see th
 
 ![jira-plugin-configured](/images/jira-plugin-configured.png)
 
+
+There are two ways we can now run the scan locally. We can configure the fdevsec.yaml in more of a declarative approach, or we can use a more imperative approach and utilize command line arguments. Both will be demonstrated below. 
+
+First, ensure Docker is running in your command line environment. 
+
+```sh
+docker --version
+> Docker version 20.10.21, build baeda1f
+```
+
+### Declarative Approach: Configuring fdevsec.yaml
+
 Now, to run the SAST scan, the fdevsec.yaml file needs to be configured to tell FortiDevSec what kind of scan we want to run. If this is not specified, FortiDevSec will default to a SAST scan. We can also optionally specify the languages in the codebase that we want FortiDevSec to scan. If this parameter is left blank FortiDevSec will automatically detect the languages present. After adding the required details, the file should look like:
 
 ```sh
@@ -49,13 +61,6 @@ scanners:
   - container
 ```
 
-Ensure docker is running.
-
-```sh
-docker --version
-> Docker version 20.10.21, build baeda1f
-```
-
 Run the following command to start the scan:
 
 ```sh
@@ -65,6 +70,20 @@ docker run --rm --mount type=bind,source="$PWD",target=/scan registry.fortidevse
 You should see the following output once the scan is complete:
 
 ![sast-run-done-output](/images/sast-run-done-output.png)
+
+
+### Imperative Approach: Using Command Line Arguments
+
+Equivalently, we can run a scan strictly utilizing command line arguments without the fdevsec.yaml file. The following command runs a scan with a configuration equivalent to that in the previous section:
+
+```
+docker run --rm --mount type=bind,source="$PWD",target=/scan registry.fortidevsec.forticloud.com/fdevsec_sast:latest main s \
+  --org-id <Org ID> \
+    --app-id <App ID> \
+      -S=false --scanner sast --scanner sca --scanner iac --scanner container --scanner secrets
+```
+
+For a full list of arguments that may be supplied, see the FortiDevSec documentation here: [command line arguments](https://docs.fortinet.com/document/fortidevsec/23.3.0/user-guide/88163/command-line-arguments).
 
 Now, open your browser and navigate to the FortiDevSec console and click on the application.
 

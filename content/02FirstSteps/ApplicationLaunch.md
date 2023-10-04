@@ -24,7 +24,7 @@ Click the green **New repository secret** button.
 
 ![github-settings-actions-secrets](/images/github-settings-actions-secrets.png)
 
-Under the **Name** field, type AWS_ACCESS_KEY_ID, and past in the key to the **Secret** field. Click **Add secret**.
+Under the **Name** field, type AWS_ACCESS_KEY, and past in the key to the **Secret** field. Click **Add secret**.
 
 ![access-key-enter](/images/access-key-enter.png)
 
@@ -50,6 +50,10 @@ Now click the **Actions** tab, and click **Terraform Apply** on the left-hand si
 
     ![workflow-job-complete](/images/workflow-job-complete.png)
 
-* You will then see the job steps listed individually. Scroll down and click the **Application URL** dropdown to retrieve the deployed application URL and note it down for use in a later section.
+* You will then see the job steps listed individually. Scroll down and click the **Application URL** dropdown to retrieve the deployed application URL.
 
     ![workflow-get-url](/images/workflow-get-url.png)
+
+* If you paste the URL into a browser, you should see a webpage similar to the one below. Keep the URL handy for use in a later section.
+
+![goat-module1-main](/images/goat-module1-main.png)
