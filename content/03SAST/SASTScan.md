@@ -32,7 +32,6 @@ Select it, and click **OK**. The modal will disappear, and you should now see th
 
 ![jira-plugin-configured](/images/jira-plugin-configured.png)
 
-
 There are two ways we can now run the scan locally. We can configure the fdevsec.yaml in more of a declarative approach, or we can use a more imperative approach and utilize command line arguments. Both will be demonstrated below. 
 
 First, ensure Docker is running in your command line environment. 

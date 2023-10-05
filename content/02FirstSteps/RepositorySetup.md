@@ -54,7 +54,11 @@ Ensure **Add Jira Plugin** is not enabled, as in the image below. Click **Next**
 
 ![app-setup-jiraskip](/images/app-setup-jiraskip.png)
 
-Copy the downloaded scanner configuration file title **fdevsec.yaml** to the top level directory of the application that was cloned in an earlier step. The sample command below assumes the fdevsec.yaml file has been downloaded to the local downloads folder inside the home directory and also that the AWSGoat repo has been cloned to the local home directory.
+The application ID will be displayed on the next screen. Click **SCANNER CONFIG** to download the **fdevsec.yaml** configuration file. Then be sure to click **Done** at the bottom of the modal.
+
+![scanner-config-download](/images/scanner-config-download.png)
+
+Copy the downloaded **fdevsec.yaml** to the top level directory of the application that was cloned in an earlier step. The sample command below assumes the fdevsec.yaml file has been downloaded to the local downloads folder inside the home directory and also that the AWSGoat repo has been cloned to the local home directory.
 
 ```sh
 cp ~/Downloads/fdevsec.yaml ~/AWSGoat

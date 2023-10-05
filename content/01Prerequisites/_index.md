@@ -18,5 +18,5 @@ In order to complete this workshop, you will need the following:
     * FC1-10-DEVSC-513-01-12: 1 year FortiDevSec license (standard tier). Includes DAST scannning for 5 individual applications.
     * FC1-10-DEVSC-216-02-12: FortiDAST add-on for FortiDevSec license. Adds capacity for 5 additional applications for FortiDAST scanning.
 
-4) An Attlassian account. For information on Attlassian accounts and how to create one, see [here](https://support.atlassian.com/atlassian-account/docs/create-an-atlassian-account/). If you do not have an existing license, you can request a free trial (see next step).
+4) An Atlassian account. For information on Attlassian accounts and how to create one, see [here](https://support.atlassian.com/atlassian-account/docs/create-an-atlassian-account/). If you do not have an existing license, you can request a free trial (see next step).
 

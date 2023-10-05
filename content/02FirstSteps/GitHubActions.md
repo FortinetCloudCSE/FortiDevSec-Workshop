@@ -1,8 +1,10 @@
 ---
-title: "Github Actions Runner Setup"
+title: "Github Actions Runner Setup (Optional)"
 chapter: false
 weight: 23
 ---
+
+*Note: This section walks you through setting up a self-hosted GitHub Actions runner on an AWS EC2 instance. If you'd prefer to use the 'ubuntu-latest' version which the original workflow files are already configured to use, you may skip this section altogether and proceed to the application launch step.*
 
 #### GitHub Actions Runner Setup
 
@@ -128,3 +130,23 @@ Once the stack has finished deploying, you should see the new runner listed in G
 ***Please note:** The EC2 instance deployed is configured for command line access via Session Manager. If troubleshooting runner deployment is necessary, [connect via Session Manager](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/session-manager-to-linux.html) and inspect the /var/log/cloud-init-output.log file for errors.*
 
 ![runner-deployed-idle](/images/runner-deployed-idle.png)
+
+Once the runner is successfully deployed, you'll need to change the workflow files in your forked AWSGoat repository:
+
+In **~/AWSGoat/.github/workflows/tf-apply-main.yml**, change line 20 from:
+
+```
+   ...
+    runs-on: ubuntu-latest 
+   ...
+```
+
+to:
+
+```
+   ...
+    runs-on: self-hosted 
+   ...
+```
+
+In **~/AWSGoat/.github/workflows/tf-destroy-main.yml**, make the same change to line 19.
