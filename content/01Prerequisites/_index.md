@@ -20,3 +20,4 @@ In order to complete this workshop, you will need the following:
 
 4) An Atlassian account. For information on Attlassian accounts and how to create one, see [here](https://support.atlassian.com/atlassian-account/docs/create-an-atlassian-account/). If you do not have an existing license, you can request a free trial (see next step).
 
+5) **Optional:** In order to perform a DAST scan on a live, web-exposed application, you'll need to deploy the application using Terraform and GitHub Actions. Included in this section are instructions for setting up a self-hosted GitHub Actions runner on an EC2 instance in your own AWS account. This step is optional, and deployment steps can be performed the same way on GitHub-hosted runners as well, which the default GitHub Actions workflow files are already configured to work with.

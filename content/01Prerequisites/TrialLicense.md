@@ -1,7 +1,7 @@
 ---
 title: "Obtaining an Atlassian Trial License"
 chapter: false
-weight: 12
+weight: 20
 ---
 
 ### Obtaining an Atlassian Trial License
