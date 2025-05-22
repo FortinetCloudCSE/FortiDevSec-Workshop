@@ -1,0 +1,43 @@
+{
+    "repoName": "FortiDevSec-Workshop",
+    "author": "Jeff Kopko",
+    "workshopTitle": "Hugo for Fortinet TECWorkshops",
+    "themeVariant": "Workshop",
+    "logoBannerText": "FortiHugo",
+    "logoBannerSubText": "",
+    "errorLevel": "warning",
+    "googleServicesID": "G-5RZBH288ST",
+    "marketingCode": "FortiHugo202",
+    "shortcuts": [
+        {
+            "text": "Fortinet Cloud CSE GitHub Org",
+            "URL": "https://github.com/FortinetCloudCSE",
+            "icon": "fa-tools",
+            "weight": 1
+        },
+        {
+            "text": "Fortinet Standard Workshop Guide",
+            "URL": "https://fortinetcloudcse.github.io/UserRepo",
+            "icon": "fa-tools",
+            "weight": 11
+        },
+        {
+            "text": "Fortinet Standard Workshop Template Repo",
+            "URL": "https://github.com/FortinetCloudCSE/UserRepo",
+            "icon": "fa-tools",
+            "weight": 21
+        },
+        {
+            "text": "Hugo reLearn theme - Guide",
+            "URL": "https://mcshelby.github.io/hugo-theme-relearn/index.html",
+            "icon": "fa-tools",
+            "weight": 35
+        },
+        {
+            "text": "AWS Sample Workshop",
+            "URL": "https://aws-samples.github.io/aws-modernization-workshop-sample/",
+            "icon": "fa-tools",
+            "weight": 50
+        }
+    ]
+}
