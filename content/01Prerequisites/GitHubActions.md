@@ -21,23 +21,23 @@ In order to deploy the runner, you'll need to fill in several pieces of informat
 
 On your forked application Github page, click the 'Settings' tab.
 
-![goat-fork-settings](/images/goat-fork-settings.png)
+![goat-fork-settings](goat-fork-settings.png)
 
 Click the **Actions** dropdown on the left-hand sidebar, and click **Runners**.
 
-![github-settings](/images/github-settings.png)
+![github-settings](github-settings.png)
 
 Click **New self-hosted runner**
 
-![github-settings-runner](/images/github-settings-runner.png)
+![github-settings-runner](github-settings-runner.png)
 
 Click the **Linux** Runner image option.
 
-![github-settings-runner-2](/images/github-settings-runner-2.png)
+![github-settings-runner-2](github-settings-runner-2.png)
 
 Note the **Download** and **Configure** sections beneath it:
 
-![new-runner](/images/new-runner.png)
+![new-runner](new-runner.png)
 
 You will need to copy down several pieces of information in these sections/code blocks.
 
@@ -129,7 +129,7 @@ Once the stack has finished deploying, you should see the new runner listed in G
 
 ***Please note:** The EC2 instance deployed is configured for command line access via Session Manager. If troubleshooting runner deployment is necessary, [connect via Session Manager](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/session-manager-to-linux.html) and inspect the /var/log/cloud-init-output.log file for errors.*
 
-![runner-deployed-idle](/images/runner-deployed-idle.png)
+![runner-deployed-idle](runner-deployed-idle.png)
 
 Once the runner is successfully deployed, you'll need to change the workflow files in your forked AWSGoat repository:
 

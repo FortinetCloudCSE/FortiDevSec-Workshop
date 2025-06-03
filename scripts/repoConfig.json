@@ -1,7 +1,7 @@
 {
-  "repoName":"UserRepo",
-  "author":"Jeff Kopko",
-  "workshopTitle":"Hugo for Fortinet TECWorkshops",
+  "repoName":"FortiDevSec-Workshop",
+  "author":"Rob Reris",
+  "workshopTitle":"Code Security with FortiDevSec and FortiDAST",
   "themeVariant":"Workshop",
   "logoBannerText":"FortiHugo",
   "logoBannerSubText":"",
